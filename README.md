@@ -1,0 +1,1 @@
+Tugas UTS menjelaskan tentang jalan kereta api dan bandara di sekitar daerah iwate,aomori, serta akita
