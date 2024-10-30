@@ -1,0 +1,1420 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/Akita_1.js"></script>
+        <script src="data/Iwate_2.js"></script>
+        <script src="data/Miyagi_3.js"></script>
+        <script src="data/aomorikenaomori__4.js"></script>
+        <script src="data/Yamagata_5.js"></script>
+        <script src="data/Nigata_6.js"></script>
+        <script src="data/Fukushimaboundary_administrative_fukushima_7.js"></script>
+        <script src="data/Gunma_8.js"></script>
+        <script src="data/Tochigi_9.js"></script>
+        <script src="data/Ibaraki_10.js"></script>
+        <script src="data/Chiba_11.js"></script>
+        <script src="data/Saitama_12.js"></script>
+        <script src="data/Nagano_13.js"></script>
+        <script src="data/Toyama_14.js"></script>
+        <script src="data/Fukui_15.js"></script>
+        <script src="data/Ishikawa_16.js"></script>
+        <script src="data/Yamanashi_17.js"></script>
+        <script src="data/Sapporo_18.js"></script>
+        <script src="data/airp_jpn_19.js"></script>
+        <script src="data/raill_jpn_20.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[32.578696668171304,131.41504126965867],[43.5382362065546,148.47053806866603]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0].innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0].className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleRoad_0');
+        map.getPane('pane_GoogleRoad_0').style.zIndex = 400;
+        var layer_GoogleRoad_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleRoad_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleRoad_0;
+        map.addLayer(layer_GoogleRoad_0);
+        function pop_Akita_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Akita'] !== null ? autolinker.link(feature.properties['Akita'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Akita_1_0() {
+            return {
+                pane: 'pane_Akita_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(229,134,41,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Akita_1');
+        map.getPane('pane_Akita_1').style.zIndex = 401;
+        map.getPane('pane_Akita_1').style['mix-blend-mode'] = 'normal';
+        var layer_Akita_1 = new L.geoJson(json_Akita_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Akita_1',
+            layerName: 'layer_Akita_1',
+            pane: 'pane_Akita_1',
+            onEachFeature: pop_Akita_1,
+            style: style_Akita_1_0,
+        });
+        bounds_group.addLayer(layer_Akita_1);
+        map.addLayer(layer_Akita_1);
+        function pop_Iwate_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Iwate'] !== null ? autolinker.link(feature.properties['Iwate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Iwate_2_0() {
+            return {
+                pane: 'pane_Iwate_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,89,137,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Iwate_2');
+        map.getPane('pane_Iwate_2').style.zIndex = 402;
+        map.getPane('pane_Iwate_2').style['mix-blend-mode'] = 'normal';
+        var layer_Iwate_2 = new L.geoJson(json_Iwate_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Iwate_2',
+            layerName: 'layer_Iwate_2',
+            pane: 'pane_Iwate_2',
+            onEachFeature: pop_Iwate_2,
+            style: style_Iwate_2_0,
+        });
+        bounds_group.addLayer(layer_Iwate_2);
+        map.addLayer(layer_Iwate_2);
+        function pop_Miyagi_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Miyagi'] !== null ? autolinker.link(feature.properties['Miyagi'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Miyagi_3_0() {
+            return {
+                pane: 'pane_Miyagi_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(243,166,178,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Miyagi_3');
+        map.getPane('pane_Miyagi_3').style.zIndex = 403;
+        map.getPane('pane_Miyagi_3').style['mix-blend-mode'] = 'normal';
+        var layer_Miyagi_3 = new L.geoJson(json_Miyagi_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Miyagi_3',
+            layerName: 'layer_Miyagi_3',
+            pane: 'pane_Miyagi_3',
+            onEachFeature: pop_Miyagi_3,
+            style: style_Miyagi_3_0,
+        });
+        bounds_group.addLayer(layer_Miyagi_3);
+        map.addLayer(layer_Miyagi_3);
+        function pop_aomorikenaomori__4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['aomori'] !== null ? autolinker.link(feature.properties['aomori'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_aomorikenaomori__4_0() {
+            return {
+                pane: 'pane_aomorikenaomori__4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(147,48,190,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_aomorikenaomori__4');
+        map.getPane('pane_aomorikenaomori__4').style.zIndex = 404;
+        map.getPane('pane_aomorikenaomori__4').style['mix-blend-mode'] = 'normal';
+        var layer_aomorikenaomori__4 = new L.geoJson(json_aomorikenaomori__4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_aomorikenaomori__4',
+            layerName: 'layer_aomorikenaomori__4',
+            pane: 'pane_aomorikenaomori__4',
+            onEachFeature: pop_aomorikenaomori__4,
+            style: style_aomorikenaomori__4_0,
+        });
+        bounds_group.addLayer(layer_aomorikenaomori__4);
+        map.addLayer(layer_aomorikenaomori__4);
+        function pop_Yamagata_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Yamagata'] !== null ? autolinker.link(feature.properties['Yamagata'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Yamagata_5_0() {
+            return {
+                pane: 'pane_Yamagata_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(164,113,88,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Yamagata_5');
+        map.getPane('pane_Yamagata_5').style.zIndex = 405;
+        map.getPane('pane_Yamagata_5').style['mix-blend-mode'] = 'normal';
+        var layer_Yamagata_5 = new L.geoJson(json_Yamagata_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Yamagata_5',
+            layerName: 'layer_Yamagata_5',
+            pane: 'pane_Yamagata_5',
+            onEachFeature: pop_Yamagata_5,
+            style: style_Yamagata_5_0,
+        });
+        bounds_group.addLayer(layer_Yamagata_5);
+        map.addLayer(layer_Yamagata_5);
+        function pop_Nigata_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nigata'] !== null ? autolinker.link(feature.properties['Nigata'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Nigata_6_0() {
+            return {
+                pane: 'pane_Nigata_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,158,23,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Nigata_6');
+        map.getPane('pane_Nigata_6').style.zIndex = 406;
+        map.getPane('pane_Nigata_6').style['mix-blend-mode'] = 'normal';
+        var layer_Nigata_6 = new L.geoJson(json_Nigata_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Nigata_6',
+            layerName: 'layer_Nigata_6',
+            pane: 'pane_Nigata_6',
+            onEachFeature: pop_Nigata_6,
+            style: style_Nigata_6_0,
+        });
+        bounds_group.addLayer(layer_Nigata_6);
+        map.addLayer(layer_Nigata_6);
+        function pop_Fukushimaboundary_administrative_fukushima_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">full_id</th>\
+                        <td>' + (feature.properties['full_id'] !== null ? autolinker.link(feature.properties['full_id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">osm_id</th>\
+                        <td>' + (feature.properties['osm_id'] !== null ? autolinker.link(feature.properties['osm_id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">osm_type</th>\
+                        <td>' + (feature.properties['osm_type'] !== null ? autolinker.link(feature.properties['osm_type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">boundary</th>\
+                        <td>' + (feature.properties['boundary'] !== null ? autolinker.link(feature.properties['boundary'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">wikimedia_commons</th>\
+                        <td>' + (feature.properties['wikimedia_commons'] !== null ? autolinker.link(feature.properties['wikimedia_commons'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">source:population</th>\
+                        <td>' + (feature.properties['source:population'] !== null ? autolinker.link(feature.properties['source:population'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">population</th>\
+                        <td>' + (feature.properties['population'] !== null ? autolinker.link(feature.properties['population'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:th</th>\
+                        <td>' + (feature.properties['name:th'] !== null ? autolinker.link(feature.properties['name:th'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">int_name</th>\
+                        <td>' + (feature.properties['int_name'] !== null ? autolinker.link(feature.properties['int_name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">wikipedia</th>\
+                        <td>' + (feature.properties['wikipedia'] !== null ? autolinker.link(feature.properties['wikipedia'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">wikidata</th>\
+                        <td>' + (feature.properties['wikidata'] !== null ? autolinker.link(feature.properties['wikidata'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">website</th>\
+                        <td>' + (feature.properties['website'] !== null ? autolinker.link(feature.properties['website'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">type</th>\
+                        <td>' + (feature.properties['type'] !== null ? autolinker.link(feature.properties['type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">sorting_name:cs</th>\
+                        <td>' + (feature.properties['sorting_name:cs'] !== null ? autolinker.link(feature.properties['sorting_name:cs'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ref</th>\
+                        <td>' + (feature.properties['ref'] !== null ? autolinker.link(feature.properties['ref'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">place</th>\
+                        <td>' + (feature.properties['place'] !== null ? autolinker.link(feature.properties['place'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:zh-Hant</th>\
+                        <td>' + (feature.properties['name:zh-Hant'] !== null ? autolinker.link(feature.properties['name:zh-Hant'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:zh-Hans</th>\
+                        <td>' + (feature.properties['name:zh-Hans'] !== null ? autolinker.link(feature.properties['name:zh-Hans'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:zh</th>\
+                        <td>' + (feature.properties['name:zh'] !== null ? autolinker.link(feature.properties['name:zh'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:uk</th>\
+                        <td>' + (feature.properties['name:uk'] !== null ? autolinker.link(feature.properties['name:uk'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:ru</th>\
+                        <td>' + (feature.properties['name:ru'] !== null ? autolinker.link(feature.properties['name:ru'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:pt</th>\
+                        <td>' + (feature.properties['name:pt'] !== null ? autolinker.link(feature.properties['name:pt'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:pl</th>\
+                        <td>' + (feature.properties['name:pl'] !== null ? autolinker.link(feature.properties['name:pl'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:ko</th>\
+                        <td>' + (feature.properties['name:ko'] !== null ? autolinker.link(feature.properties['name:ko'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:ja-Latn</th>\
+                        <td>' + (feature.properties['name:ja-Latn'] !== null ? autolinker.link(feature.properties['name:ja-Latn'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:ja-Hira</th>\
+                        <td>' + (feature.properties['name:ja-Hira'] !== null ? autolinker.link(feature.properties['name:ja-Hira'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:ja</th>\
+                        <td>' + (feature.properties['name:ja'] !== null ? autolinker.link(feature.properties['name:ja'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:it</th>\
+                        <td>' + (feature.properties['name:it'] !== null ? autolinker.link(feature.properties['name:it'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:fr</th>\
+                        <td>' + (feature.properties['name:fr'] !== null ? autolinker.link(feature.properties['name:fr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:es</th>\
+                        <td>' + (feature.properties['name:es'] !== null ? autolinker.link(feature.properties['name:es'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:eo</th>\
+                        <td>' + (feature.properties['name:eo'] !== null ? autolinker.link(feature.properties['name:eo'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:en</th>\
+                        <td>' + (feature.properties['name:en'] !== null ? autolinker.link(feature.properties['name:en'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:de</th>\
+                        <td>' + (feature.properties['name:de'] !== null ? autolinker.link(feature.properties['name:de'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:cs</th>\
+                        <td>' + (feature.properties['name:cs'] !== null ? autolinker.link(feature.properties['name:cs'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name:ar</th>\
+                        <td>' + (feature.properties['name:ar'] !== null ? autolinker.link(feature.properties['name:ar'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name</th>\
+                        <td>' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">is_in:country_code</th>\
+                        <td>' + (feature.properties['is_in:country_code'] !== null ? autolinker.link(feature.properties['is_in:country_code'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">is_in:country</th>\
+                        <td>' + (feature.properties['is_in:country'] !== null ? autolinker.link(feature.properties['is_in:country'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">admin_level</th>\
+                        <td>' + (feature.properties['admin_level'] !== null ? autolinker.link(feature.properties['admin_level'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ISO3166-2</th>\
+                        <td>' + (feature.properties['ISO3166-2'] !== null ? autolinker.link(feature.properties['ISO3166-2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Fukushimaboundary_administrative_fukushima_7_0() {
+            return {
+                pane: 'pane_Fukushimaboundary_administrative_fukushima_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(114,155,111,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Fukushimaboundary_administrative_fukushima_7');
+        map.getPane('pane_Fukushimaboundary_administrative_fukushima_7').style.zIndex = 407;
+        map.getPane('pane_Fukushimaboundary_administrative_fukushima_7').style['mix-blend-mode'] = 'normal';
+        var layer_Fukushimaboundary_administrative_fukushima_7 = new L.geoJson(json_Fukushimaboundary_administrative_fukushima_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Fukushimaboundary_administrative_fukushima_7',
+            layerName: 'layer_Fukushimaboundary_administrative_fukushima_7',
+            pane: 'pane_Fukushimaboundary_administrative_fukushima_7',
+            onEachFeature: pop_Fukushimaboundary_administrative_fukushima_7,
+            style: style_Fukushimaboundary_administrative_fukushima_7_0,
+        });
+        bounds_group.addLayer(layer_Fukushimaboundary_administrative_fukushima_7);
+        map.addLayer(layer_Fukushimaboundary_administrative_fukushima_7);
+        function pop_Gunma_8(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Gunma'] !== null ? autolinker.link(feature.properties['Gunma'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Gunma_8_0() {
+            return {
+                pane: 'pane_Gunma_8',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(183,72,75,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Gunma_8');
+        map.getPane('pane_Gunma_8').style.zIndex = 408;
+        map.getPane('pane_Gunma_8').style['mix-blend-mode'] = 'normal';
+        var layer_Gunma_8 = new L.geoJson(json_Gunma_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Gunma_8',
+            layerName: 'layer_Gunma_8',
+            pane: 'pane_Gunma_8',
+            onEachFeature: pop_Gunma_8,
+            style: style_Gunma_8_0,
+        });
+        bounds_group.addLayer(layer_Gunma_8);
+        map.addLayer(layer_Gunma_8);
+        function pop_Tochigi_9(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Tochigi'] !== null ? autolinker.link(feature.properties['Tochigi'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Tochigi_9_0() {
+            return {
+                pane: 'pane_Tochigi_9',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,82,45,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Tochigi_9');
+        map.getPane('pane_Tochigi_9').style.zIndex = 409;
+        map.getPane('pane_Tochigi_9').style['mix-blend-mode'] = 'normal';
+        var layer_Tochigi_9 = new L.geoJson(json_Tochigi_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Tochigi_9',
+            layerName: 'layer_Tochigi_9',
+            pane: 'pane_Tochigi_9',
+            onEachFeature: pop_Tochigi_9,
+            style: style_Tochigi_9_0,
+        });
+        bounds_group.addLayer(layer_Tochigi_9);
+        map.addLayer(layer_Tochigi_9);
+        function pop_Ibaraki_10(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Ibaraki'] !== null ? autolinker.link(feature.properties['Ibaraki'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Ibaraki_10_0() {
+            return {
+                pane: 'pane_Ibaraki_10',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(164,113,88,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Ibaraki_10');
+        map.getPane('pane_Ibaraki_10').style.zIndex = 410;
+        map.getPane('pane_Ibaraki_10').style['mix-blend-mode'] = 'normal';
+        var layer_Ibaraki_10 = new L.geoJson(json_Ibaraki_10, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Ibaraki_10',
+            layerName: 'layer_Ibaraki_10',
+            pane: 'pane_Ibaraki_10',
+            onEachFeature: pop_Ibaraki_10,
+            style: style_Ibaraki_10_0,
+        });
+        bounds_group.addLayer(layer_Ibaraki_10);
+        map.addLayer(layer_Ibaraki_10);
+        function pop_Chiba_11(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Chiba'] !== null ? autolinker.link(feature.properties['Chiba'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Chiba_11_0() {
+            return {
+                pane: 'pane_Chiba_11',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(243,166,178,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Chiba_11');
+        map.getPane('pane_Chiba_11').style.zIndex = 411;
+        map.getPane('pane_Chiba_11').style['mix-blend-mode'] = 'normal';
+        var layer_Chiba_11 = new L.geoJson(json_Chiba_11, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Chiba_11',
+            layerName: 'layer_Chiba_11',
+            pane: 'pane_Chiba_11',
+            onEachFeature: pop_Chiba_11,
+            style: style_Chiba_11_0,
+        });
+        bounds_group.addLayer(layer_Chiba_11);
+        map.addLayer(layer_Chiba_11);
+        function pop_Saitama_12(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Saitama'] !== null ? autolinker.link(feature.properties['Saitama'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Saitama_12_0() {
+            return {
+                pane: 'pane_Saitama_12',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(141,90,153,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Saitama_12');
+        map.getPane('pane_Saitama_12').style.zIndex = 412;
+        map.getPane('pane_Saitama_12').style['mix-blend-mode'] = 'normal';
+        var layer_Saitama_12 = new L.geoJson(json_Saitama_12, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Saitama_12',
+            layerName: 'layer_Saitama_12',
+            pane: 'pane_Saitama_12',
+            onEachFeature: pop_Saitama_12,
+            style: style_Saitama_12_0,
+        });
+        bounds_group.addLayer(layer_Saitama_12);
+        map.addLayer(layer_Saitama_12);
+        function pop_Nagano_13(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Nagano'] !== null ? autolinker.link(feature.properties['Nagano'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Nagano_13_0() {
+            return {
+                pane: 'pane_Nagano_13',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,180,60,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Nagano_13');
+        map.getPane('pane_Nagano_13').style.zIndex = 413;
+        map.getPane('pane_Nagano_13').style['mix-blend-mode'] = 'normal';
+        var layer_Nagano_13 = new L.geoJson(json_Nagano_13, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Nagano_13',
+            layerName: 'layer_Nagano_13',
+            pane: 'pane_Nagano_13',
+            onEachFeature: pop_Nagano_13,
+            style: style_Nagano_13_0,
+        });
+        bounds_group.addLayer(layer_Nagano_13);
+        map.addLayer(layer_Nagano_13);
+        function pop_Toyama_14(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Toyama'] !== null ? autolinker.link(feature.properties['Toyama'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Toyama_14_0() {
+            return {
+                pane: 'pane_Toyama_14',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(152,125,183,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Toyama_14');
+        map.getPane('pane_Toyama_14').style.zIndex = 414;
+        map.getPane('pane_Toyama_14').style['mix-blend-mode'] = 'normal';
+        var layer_Toyama_14 = new L.geoJson(json_Toyama_14, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Toyama_14',
+            layerName: 'layer_Toyama_14',
+            pane: 'pane_Toyama_14',
+            onEachFeature: pop_Toyama_14,
+            style: style_Toyama_14_0,
+        });
+        bounds_group.addLayer(layer_Toyama_14);
+        map.addLayer(layer_Toyama_14);
+        function pop_Fukui_15(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Fukui'] !== null ? autolinker.link(feature.properties['Fukui'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Fukui_15_0() {
+            return {
+                pane: 'pane_Fukui_15',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(243,166,178,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Fukui_15');
+        map.getPane('pane_Fukui_15').style.zIndex = 415;
+        map.getPane('pane_Fukui_15').style['mix-blend-mode'] = 'normal';
+        var layer_Fukui_15 = new L.geoJson(json_Fukui_15, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Fukui_15',
+            layerName: 'layer_Fukui_15',
+            pane: 'pane_Fukui_15',
+            onEachFeature: pop_Fukui_15,
+            style: style_Fukui_15_0,
+        });
+        bounds_group.addLayer(layer_Fukui_15);
+        map.addLayer(layer_Fukui_15);
+        function pop_Ishikawa_16(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Ishikawa'] !== null ? autolinker.link(feature.properties['Ishikawa'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Ishikawa_16_0() {
+            return {
+                pane: 'pane_Ishikawa_16',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,158,23,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Ishikawa_16');
+        map.getPane('pane_Ishikawa_16').style.zIndex = 416;
+        map.getPane('pane_Ishikawa_16').style['mix-blend-mode'] = 'normal';
+        var layer_Ishikawa_16 = new L.geoJson(json_Ishikawa_16, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Ishikawa_16',
+            layerName: 'layer_Ishikawa_16',
+            pane: 'pane_Ishikawa_16',
+            onEachFeature: pop_Ishikawa_16,
+            style: style_Ishikawa_16_0,
+        });
+        bounds_group.addLayer(layer_Ishikawa_16);
+        map.addLayer(layer_Ishikawa_16);
+        function pop_Yamanashi_17(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Yamanashi'] !== null ? autolinker.link(feature.properties['Yamanashi'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Yamanashi_17_0() {
+            return {
+                pane: 'pane_Yamanashi_17',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(125,139,143,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Yamanashi_17');
+        map.getPane('pane_Yamanashi_17').style.zIndex = 417;
+        map.getPane('pane_Yamanashi_17').style['mix-blend-mode'] = 'normal';
+        var layer_Yamanashi_17 = new L.geoJson(json_Yamanashi_17, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Yamanashi_17',
+            layerName: 'layer_Yamanashi_17',
+            pane: 'pane_Yamanashi_17',
+            onEachFeature: pop_Yamanashi_17,
+            style: style_Yamanashi_17_0,
+        });
+        bounds_group.addLayer(layer_Yamanashi_17);
+        map.addLayer(layer_Yamanashi_17);
+        function pop_Sapporo_18(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Sapporo'] !== null ? autolinker.link(feature.properties['Sapporo'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Sapporo_18_0() {
+            return {
+                pane: 'pane_Sapporo_18',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(183,72,75,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Sapporo_18');
+        map.getPane('pane_Sapporo_18').style.zIndex = 418;
+        map.getPane('pane_Sapporo_18').style['mix-blend-mode'] = 'normal';
+        var layer_Sapporo_18 = new L.geoJson(json_Sapporo_18, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Sapporo_18',
+            layerName: 'layer_Sapporo_18',
+            pane: 'pane_Sapporo_18',
+            onEachFeature: pop_Sapporo_18,
+            style: style_Sapporo_18_0,
+        });
+        bounds_group.addLayer(layer_Sapporo_18);
+        map.addLayer(layer_Sapporo_18);
+        function pop_airp_jpn_19(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['f_code'] !== null ? autolinker.link(feature.properties['f_code'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['iko'] !== null ? autolinker.link(feature.properties['iko'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ita'] !== null ? autolinker.link(feature.properties['ita'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nam'] !== null ? autolinker.link(feature.properties['nam'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['use'] !== null ? autolinker.link(feature.properties['use'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['zv3'] !== null ? autolinker.link(feature.properties['zv3'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['soc'] !== null ? autolinker.link(feature.properties['soc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_airp_jpn_19_0() {
+            return {
+                pane: 'pane_airp_jpn_19',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,89,137,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_airp_jpn_19');
+        map.getPane('pane_airp_jpn_19').style.zIndex = 419;
+        map.getPane('pane_airp_jpn_19').style['mix-blend-mode'] = 'normal';
+        var layer_airp_jpn_19 = new L.geoJson(json_airp_jpn_19, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_airp_jpn_19',
+            layerName: 'layer_airp_jpn_19',
+            pane: 'pane_airp_jpn_19',
+            onEachFeature: pop_airp_jpn_19,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_airp_jpn_19_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_airp_jpn_19);
+        map.addLayer(layer_airp_jpn_19);
+        function pop_raill_jpn_20(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['f_code'] !== null ? autolinker.link(feature.properties['f_code'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['exs'] !== null ? autolinker.link(feature.properties['exs'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fco'] !== null ? autolinker.link(feature.properties['fco'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['loc'] !== null ? autolinker.link(feature.properties['loc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['soc'] !== null ? autolinker.link(feature.properties['soc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_raill_jpn_20_0() {
+            return {
+                pane: 'pane_raill_jpn_20',
+                opacity: 1,
+                color: 'rgba(196,60,57,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_raill_jpn_20');
+        map.getPane('pane_raill_jpn_20').style.zIndex = 420;
+        map.getPane('pane_raill_jpn_20').style['mix-blend-mode'] = 'normal';
+        var layer_raill_jpn_20 = new L.geoJson(json_raill_jpn_20, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_raill_jpn_20',
+            layerName: 'layer_raill_jpn_20',
+            pane: 'pane_raill_jpn_20',
+            onEachFeature: pop_raill_jpn_20,
+            style: style_raill_jpn_20_0,
+        });
+        bounds_group.addLayer(layer_raill_jpn_20);
+        map.addLayer(layer_raill_jpn_20);
+        setBounds();
+        var i = 0;
+        layer_Akita_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Akita'] !== null?String('<div style="color: #eeeeee; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Akita']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Akita_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Iwate_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Iwate'] !== null?String('<div style="color: #f1f1f1; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Iwate']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Iwate_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Miyagi_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Miyagi'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Miyagi']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Miyagi_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_aomorikenaomori__4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['aomori'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-weight: bold; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['aomori']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_aomorikenaomori__4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Yamagata_5.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Yamagata'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Yamagata']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Yamagata_5'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Nigata_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nigata'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nigata']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Nigata_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Fukushimaboundary_administrative_fukushima_7.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((exp_label_Fukushimaboundary_administrative_fukushima_7_eval_expression(context) !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + exp_label_Fukushimaboundary_administrative_fukushima_7_eval_expression(context)) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Fukushimaboundary_administrative_fukushima_7'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Gunma_8.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Gunma'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Gunma']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Gunma_8'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Tochigi_9.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Tochigi'] !== null?String('<div style="color: #d2d2d2; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Tochigi']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Tochigi_9'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Ibaraki_10.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Ibaraki'] !== null?String('<div style="color: #fcfcfc; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Ibaraki']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Ibaraki_10'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Chiba_11.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Chiba'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Chiba']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Chiba_11'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Saitama_12.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Saitama'] !== null?String('<div style="color: #f2f2f2; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Saitama']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Saitama_12'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Nagano_13.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nagano'] !== null?String('<div style="color: #cecece; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Nagano']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Nagano_13'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Yamanashi_17.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Yamanashi'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Yamanashi']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Yamanashi_17'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Sapporo_18.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Sapporo'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Sapporo']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Sapporo_18'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_Akita_1,layer_Iwate_2,layer_Miyagi_3,layer_aomorikenaomori__4,layer_Yamagata_5,layer_Nigata_6,layer_Fukushimaboundary_administrative_fukushima_7,layer_Gunma_8,layer_Tochigi_9,layer_Ibaraki_10,layer_Chiba_11,layer_Saitama_12,layer_Nagano_13,layer_Yamanashi_17,layer_Sapporo_18]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Akita_1,layer_Iwate_2,layer_Miyagi_3,layer_aomorikenaomori__4,layer_Yamagata_5,layer_Nigata_6,layer_Fukushimaboundary_administrative_fukushima_7,layer_Gunma_8,layer_Tochigi_9,layer_Ibaraki_10,layer_Chiba_11,layer_Saitama_12,layer_Nagano_13,layer_Yamanashi_17,layer_Sapporo_18]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Akita_1,layer_Iwate_2,layer_Miyagi_3,layer_aomorikenaomori__4,layer_Yamagata_5,layer_Nigata_6,layer_Fukushimaboundary_administrative_fukushima_7,layer_Gunma_8,layer_Tochigi_9,layer_Ibaraki_10,layer_Chiba_11,layer_Saitama_12,layer_Nagano_13,layer_Yamanashi_17,layer_Sapporo_18]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Akita_1,layer_Iwate_2,layer_Miyagi_3,layer_aomorikenaomori__4,layer_Yamagata_5,layer_Nigata_6,layer_Fukushimaboundary_administrative_fukushima_7,layer_Gunma_8,layer_Tochigi_9,layer_Ibaraki_10,layer_Chiba_11,layer_Saitama_12,layer_Nagano_13,layer_Yamanashi_17,layer_Sapporo_18]);
+        });
+        </script>
+    </body>
+</html>
